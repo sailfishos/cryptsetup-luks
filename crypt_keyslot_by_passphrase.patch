@@ -1,0 +1,73 @@
+diff --git a/lib/libcryptsetup.h b/lib/libcryptsetup.h
+index c2cf5fb..13eea7b 100644
+--- a/lib/libcryptsetup.h
++++ b/lib/libcryptsetup.h
+@@ -572,6 +572,13 @@ int crypt_luksDump(struct crypt_options *options);
+ 
+ void crypt_put_options(struct crypt_options *options);
+ 
++int crypt_keyslot_by_passphrase(struct crypt_device *cd,
++                                const char *key_file,
++                                const char *passphrase,
++                                size_t passphrase_size,
++                                unsigned int flags,
++                                char *message);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/lib/libcryptsetup.sym b/lib/libcryptsetup.sym
+index d4ed0dc..3a25c53 100644
+--- a/lib/libcryptsetup.sym
++++ b/lib/libcryptsetup.sym
+@@ -58,6 +58,7 @@ CRYPTSETUP_1.0 {
+ 		crypt_luksUUID;
+ 		crypt_isLuks;
+ 		crypt_luksDump;
++		crypt_keyslot_by_passphrase;
+ 
+ 		crypt_put_options;
+ 	local:
+diff --git a/lib/setup.c b/lib/setup.c
+index 0fcf912..4750d06 100644
+--- a/lib/setup.c
++++ b/lib/setup.c
+@@ -756,6 +756,38 @@ int crypt_remove_device(struct crypt_options *options)
+ 
+ }
+ 
++int crypt_keyslot_by_passphrase(struct crypt_device *cd,
++				const char *key_file,
++				const char *passphrase,
++				size_t passphrase_size,
++				unsigned int flags,
++				char *message)
++{
++	struct luks_masterkey *mk;
++	char *password = NULL;
++	unsigned int passwordLen;
++	int keyIndex;
++
++	if (passphrase) {
++		keyIndex = LUKS_open_key_with_hdr(cd->device, CRYPT_ANY_SLOT, passphrase,
++						  passphrase_size, &cd->hdr, &mk, cd);
++	}
++	else {
++		get_key(message,&password,&passwordLen, 0, key_file,
++			cd->timeout, flags, cd);
++		if(!password)
++			return -EINVAL;
++
++		keyIndex = LUKS_open_key_with_hdr(cd->device, CRYPT_ANY_SLOT, password,
++						  passwordLen, &cd->hdr, &mk, cd);
++	}
++
++	LUKS_dealloc_masterkey(mk);
++	safe_free(password);
++
++	return keyIndex;
++}
++
+ /* OPTIONS: device, cipher, hash, align_payload, key_size (master key), key_slot
+  *          new_key_file, iteration_time, timeout, flags, icb */
+ int crypt_luksFormat(struct crypt_options *options)

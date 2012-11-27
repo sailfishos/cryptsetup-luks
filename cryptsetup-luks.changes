@@ -1,0 +1,31 @@
+* Tue Jun 28 2011 Chris Ferron <chris.e.ferron@linux.intel.com> - 1.1.3
+- PACKAGE CLEANUP - Removed unnecessary Obsoletes and Provides cryptsetup as there is no other packages that Requires or Provides them. 
+
+* Tue Apr 19 2011 Anas Nashif <anas.nashif@intel.com> - 1.1.3
+- Install pkgconfig file into /usr/lib/pkgconfig, not /lib/pkgconfig
+
+* Fri Jul 30 2010 Bernd Wachter <ext-bernd.wachter@nokia.com> - 1.1.3
+- Add crypt_keyslot_by_passphrase.patch required for signon
+- Remove obsolete cryptsetup-prompt.patch
+
+* Wed Jul 28 2010 Bernd Wachter <ext-bernd.wachter@nokia.com> - 1.1.3
+- Use the simplified patch sent to upstream
+- Remove explicit gcrypt dependency on -devel
+
+* Mon Jul 26 2010 Bernd Wachter <ext-bernd.wachter@nokia.com> - 1.1.3
+- Update to 1.1.3
+- Add patch to port cryptsetup-maemo changes to latest cryptsetup
+- Switch to openssl as crypt backend
+
+* Wed Jan 27 2010 Passion Zhao <passion.zhao@intel.com> - 1.1.0-1
+- Update to 1.1.0
+
+* Mon Sep 07 2009 Passion Zhao <passion.zhao@intel.com> - 1.0.7-1
+- Upgrade to 1.0.7, remove obsolete patch cryptsetup-prompt.patch
+
+* Sun Jul 19 2009 Peter J Zhu <peter.j.zhu@intel.com> - 1.0.6 -3
+- Add BuildRequires of libuuid-devel
+
+* Thu Mar 6 2009 Passion Zhao <passion.zhao@intel.com> - 1.0.6 -3
+- Fix the URL and source url
+
